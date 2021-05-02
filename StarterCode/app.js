@@ -29,20 +29,20 @@ d3.json("static/js/samples.json").then((data) => {
     console.log(top10labels)
 
 
-    // var sel = d3.select("#selDataset")
-    // sel.append('option')
-    // .html('940')
+    var sel = d3.select("#selDataset")
+    sel.append('option')
+        .html('940')
 
-    // function optionchanged (id){ alert(id) } {
+    function optionchanged(id) { alert(id) } {
 
-    //     // Assign the dropdown menu item ID to a variable
-    // var dropdownMenuID = dropdownMenu.id;
-    //     // Assign the dropdown menu option to a variable
-    // var selectedOption = dropdownMenu.value;
+        // Assign the dropdown menu item ID to a variable
+        var dropdownMenuID = dropdownMenu.id;
+        // Assign the dropdown menu option to a variable
+        var selectedOption = dropdownMenu.value;
 
-    //     console.log(dropdownMenuID);
-    //     console.log(selectedOption);
-    // }
+        console.log(dropdownMenuID);
+        console.log(selectedOption);
+    }
 
 
     var trace1 = {
