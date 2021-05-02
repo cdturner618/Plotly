@@ -1,48 +1,51 @@
+var subjectID;
+var samples;
+var meta;
 
 d3.json("static/js/samples.json").then((data) => {
     germs = data
 
     console.log(germs);
 
-    // Promise Pending
-    const dataPromise = d3.json("static/js/samples.json");
-    console.log("Data Promise: ", dataPromise);
-
-    var subjectID = germs.names;
-    var samples = germs.samples;
-    var meta = germs.metadata;
+    subjectID = germs.names;
+    samples = germs.samples;
+    meta = germs.metadata;
 
     console.log(samples)
     console.log(subjectID)
     console.log(meta)
 
-    var otu_ids = germs.samples.filter((key) => { return key.id === "940" })[0].otu_ids
+    loaddropdownlist(subjectID)
+
+    // Promise Pending
+    const dataPromise = d3.json("static/js/samples.json");
+    console.log("Data Promise: ", dataPromise);
+    buildchart('940', germs);
+
+});
+
+
+var sel1 = d3.select('#sample-metadat')
+sel1.append()
+
+function buildchart(id, germs) {
+
+    console.log(germs.samples)
+
+    var otu_ids = germs.samples.filter((key) => { return key.id === id })[0].otu_ids
     var top10id = otu_ids.slice(0, 10)
     console.log(top10id)
 
-    var sample_values = germs.samples.filter((key) => { return key.id === "940" })[0].sample_values
+    var sample_values = germs.samples.filter((key) => { return key.id === id })[0].sample_values
     var top10samplesvalues = sample_values.slice(0, 10)
     console.log(top10samplesvalues)
 
-    var otu_labels = germs.samples.filter((key) => { return key.id === "940" })[0].otu_labels
+    var otu_labels = germs.samples.filter((key) => { return key.id === id })[0].otu_labels
     var top10labels = otu_labels.slice(0, 10)
     console.log(top10labels)
 
 
-    var sel = d3.select("#selDataset")
-    sel.append('option')
-        .html('940')
 
-    function optionchanged(id) { alert(id) } {
-
-        // Assign the dropdown menu item ID to a variable
-        var dropdownMenuID = dropdownMenu.id;
-        // Assign the dropdown menu option to a variable
-        var selectedOption = dropdownMenu.value;
-
-        console.log(dropdownMenuID);
-        console.log(selectedOption);
-    }
 
 
     var trace1 = {
@@ -65,9 +68,11 @@ d3.json("static/js/samples.json").then((data) => {
     var trace2 = {
         x: top10id,
         y: top10samplesvalues,
-        orientation: 'h',
         mode: 'markers',
-        size: top10samplesvalues
+        markers: {
+            size: top10samplesvalues
+        }
+
     };
 
     // Create the data array for the plot
@@ -78,11 +83,26 @@ d3.json("static/js/samples.json").then((data) => {
     };
 
     Plotly.newPlot("bubble", germ2, layout2);
-});
 
-
-var sel1 = d3.select('#sample-metadat')
-sel1.append()
+}
 
 
 
+function loaddropdownlist(subjectID) {
+    var sel = document.getElementById("selDataset");
+    subjectID.forEach(otu => {
+        var currentOption = document.createElement('option');
+        currentOption.text = otu;
+        sel.appendChild(currentOption);
+
+    });
+};
+
+function optionChanged(id) { alert(id) } {
+    var dropdownMenu = d3.select('#selDataset');
+
+    // Assign the dropdown menu option to a variable
+    var selectedOption = dropdownMenu.value;
+    console.log(selectedOption);
+    buildchart(selectedOption);
+}
