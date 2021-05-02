@@ -1,6 +1,7 @@
 var subjectID;
 var samples;
 var meta;
+var germs;
 
 d3.json("static/js/samples.json").then((data) => {
     germs = data
@@ -17,18 +18,12 @@ d3.json("static/js/samples.json").then((data) => {
 
     loaddropdownlist(subjectID)
 
-    // Promise Pending
-    const dataPromise = d3.json("static/js/samples.json");
-    console.log("Data Promise: ", dataPromise);
-    buildchart('940', germs);
+
+    buildchart('940');
 
 });
 
-
-var sel1 = d3.select('#sample-metadat')
-sel1.append()
-
-function buildchart(id, germs) {
+function buildchart(id) {
 
     console.log(germs.samples)
 
@@ -45,9 +40,7 @@ function buildchart(id, germs) {
     console.log(top10labels)
 
 
-
-
-
+    //Create Bar Chart 
     var trace1 = {
         x: top10samplesvalues,
         orientation: 'h',
@@ -65,6 +58,7 @@ function buildchart(id, germs) {
     Plotly.newPlot("bar", germ1, layout);
 
 
+    //Create bubble Chart 
     var trace2 = {
         x: top10id,
         y: top10samplesvalues,
@@ -98,11 +92,6 @@ function loaddropdownlist(subjectID) {
     });
 };
 
-function optionChanged(id) { alert(id) } {
-    var dropdownMenu = d3.select('#selDataset');
-
-    // Assign the dropdown menu option to a variable
-    var selectedOption = dropdownMenu.value;
-    console.log(selectedOption);
-    buildchart(selectedOption);
+function optionChanged(id) {
+    buildchart(id);
 }
