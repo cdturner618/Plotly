@@ -3,10 +3,6 @@ var samples;
 var meta;
 var germs;
 var metasample;
-// var age;
-// var gender;
-// var location;
-// var sample;
 
 d3.json("static/js/samples.json").then((data) => {
     germs = data
@@ -17,17 +13,13 @@ d3.json("static/js/samples.json").then((data) => {
     samples = germs.samples;
     meta = germs.metadata;
 
-
     console.log(samples)
     console.log(subjectID)
     console.log(meta)
 
-
     loaddropdownlist(subjectID);
 
     buildchart('940');
-
-    metaData(metasample);
 
 
 });
@@ -38,7 +30,7 @@ function buildchart(id) {
     var otu_ids = samples.filter((key) => { return key.id === id })[0].otu_ids
     var top10id = otu_ids.slice(0, 10)
     console.log(top10id)
-
+    // console.log(id)
     var sample_values = samples.filter((key) => { return key.id === id })[0].sample_values
     var top10samplesvalues = sample_values.slice(0, 10)
     console.log(top10samplesvalues)
@@ -48,15 +40,24 @@ function buildchart(id) {
     console.log(top10labels)
 
 
+    var filtering = meta.filter(sample => sample.id === parseInt(id))
+    console.log(filtering)
+    var result = filtering[0];
+    console.log(result)
+    var sample_meta = d3.select("#sample-metadata");
+    sample_meta.html("");
+    Object.entries(result).forEach(([key, value]) => {
+        sample_meta.append("h6").text(`${key}:${value}`);
+    });
+
     //Create Bar Chart 
     var trace1 = {
         x: top10samplesvalues,
-        // y: top10id,
+        //y: top10id,
         text: top10labels,
         orientation: 'h',
         type: "bar",
     };
-
 
     // Create the data array for the plot
     var germ1 = [trace1];
@@ -68,8 +69,6 @@ function buildchart(id) {
     };
 
     Plotly.newPlot("bar", germ1, layout);
-
-
 
     //Create bubble Chart 
     var trace2 = {
@@ -99,7 +98,6 @@ function buildchart(id) {
 };
 
 
-
 function loaddropdownlist(subjectID) {
     var sel = document.getElementById("selDataset");
     subjectID.forEach(otu => {
@@ -113,23 +111,6 @@ function loaddropdownlist(subjectID) {
 function optionChanged(id) {
     buildchart(id);
 
-};
-
-function metaData(metasample) {
-    d3.json("static/js/samples.json").then((data) => {
-        germs = data
-        var meta = germs.samples;
-        console.log(meta)
-        var filtering = meta.filter(sample => sample.id === metasample);
-        console.log(filtering)
-        var result = filtering[0];
-        console.log(result)
-        var sample_meta = d3.select("#sample-metadata");
-        sample_meta.html("");
-        Object.entries(result).forEach(([key, value]) => {
-            sample_meta.append("h6").text(`${key}:${value}`);
-        })
-    });
 };
 
 
