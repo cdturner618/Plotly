@@ -53,7 +53,6 @@ function buildchart(id) {
     //Create Bar Chart 
     var trace1 = {
         x: top10samplesvalues,
-        //y: top10id,
         text: top10labels,
         orientation: 'h',
         type: "bar",
